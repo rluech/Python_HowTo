@@ -4,21 +4,24 @@
 # keys are unique.
 # values can be objects of any size, form and type.
 
-# --- dictionary creation ---
+# creation
+d = {'jack': 4098, 'sjoerd': 4127}
+d = {4098: 'jack', 4127: 'sjoerd'}
+d = {x: x ** 2 for x in range(10)}
+d = dict([('foo', 100), ('bar', 200)])
+d = dict(foo=100, bar=200)
 
-d = dict()
-d = dict(key='value')
-
-d = {}
-d = {'key': 'value'}
-
-print(d)
-type(d)  # class 'dict'
+a = dict(one=1, two=2)
+b = dict({'one': 1, 'two': 2})
+c = {'one': 1, 'two': 2}
+d = dict({'one': 1}, two=2)
+e = dict([('two', 2), ('one', 1)])
+f = dict(zip(['one', 'two'], [1, 2]))
+a == b == c == d == e == f
 
 k = ('Athens', 'Paris', 'Madrid')
-d = dict.fromkeys(k)           # values: 'None'
-d = dict.fromkeys(k, 'Europe') # values: 'Europe'
-print(d)
+d = dict.fromkeys(k)            # values: 'None'
+d = dict.fromkeys(k, 'Europe')  # values: 'Europe'
 
 d = {
     'Brand': ['Ford', 'Audi', 'Honda'],
@@ -30,33 +33,47 @@ d = {
     True:    [2.3, 4.3, 1.2]
     }
 
-print(d)
-
-d.keys()
-d.values()
-d.items()
+d.keys()      # class 'dict_keys'
+list(d)       # same, as class 'list'
+d.values()    # class 'dict_values'
+d.items()     # class 'dict_items'
 len(d)
-'Brand' in d # True
-'Brand' in d.keys() # same
 
-# --- subsetting dictionaries ---
-# indexing a dictionary works only by calling the keys not by integer index.
-# .get() is safer than [key]
+# search
+'Brand' in d
+'Brand' in d.keys()  # same
+'Brand' not in d.keys()
+'Brand' not in d.values()
 
-d['Brand']
-d[1]  # ok if there is a key '1'
+# subset
+d['Brand']      # error, if 'key' is not found
+d.get('Brand')  # safer, if 'key' is not found returns NoneType or a custom value
+d[0]            # KeyError: indexing by position not allowed
+d[1]            # works if there is a key '1'
+[d.get(i) for i in ('Brand', 1, 'NA')]    # subset values by multiple keys
+{i: d.get(i) for i in ('Brand',1,'NA')}   # subset items by multiple keys
+{key:value for (key,value) in d.items()}  # same, but slow and error if key not found
 
-d['hello']  # KeyError if a key does not exist
-if 'hello' in d: d['hello']  # How to avoid KeyError
-print(d.get('hello'))  # better, returns 'None' instead KeyError
-print(d.get('hello', 'This value does not exist'))  # customize message
+# add, update
+d = {}
+d = {'size': 1.83}
+if 'size' not in d: d['size'] = 1.54  # prevent from updating an existing key
+d.update(weight=83, volume=12)  # add multiple item (or update value if key exists)
 
-# --- multiple items subsetting and comprehensions ---
+b = {'three': 3, 'four': 4}
+d.update(b)                  # merge in-place
+c = {**d, **b}               # same shallow copy
+# d + b                      # TypeError: unsupported
 
-b = {i: d.get(i) for i in ('Brand',1,'hello')}  # dictionary comprehension
-# b = {i: d[i] for i in ('Brand',1,'hello')}  # same but error for non-existing key
-# b = {key:value for (key,value) in d.items()}  # same but slow and error for non-existing key
-print(b)
+# remove
+d = {'A': 1, 'B': 2}
+del d['A']
+d.clear()  # returns empty dictionary
+d.pop('a')  # remove item and return its value, KeyError if not found
+d.pop('z', 'Not found')  # catch that error
+d.popitem()  # remove and return the last item takes no arguments
+
+# comprehensions
 
 # comprehension with (multiple) if condition and operation on i
 d = {'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5}
@@ -68,42 +85,3 @@ b = {k:('even' if v%2==0 else 'odd') for (k,v) in d.items()}
 # Nested Dictionary comprehension
 d = {'first': {'a': 1}, 'second': {'b': 2}}
 b = {outer_k: {float(inner_v) for (inner_k, inner_v) in outer_v.items()} for (outer_k, outer_v) in d.items()}
-
-# --- assign new item
-
-d = {}
-d['name'] = 'Joe'
-d['size'] = 1.82
-d['size'] = 1.79  # key already exists, this just updates the value
-if 'size' not in d: d['size'] = 1.79  # prevent from updating an existing key
-
-d = {}
-d.update(name='Joe', size=1.82)
-d.update(size=1.79)  # just updates value
-d.update(name='Rose', size=1.65, job='actor')  # adds new item
-
-# merge
-d = {'one': 1, 'two': 2}
-b = {'three': 3, 'four': 4}
-d.update(b)  # in-place
-c = {**d, **b}  # shallow copy
-# d + b  # TypeError: unsupported operand type(s) for +: 'dict'
-
-# --- delete item
-
-d = {'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5}
-del d['a']
-d.clear() # returns empty dictionary
-del d  # delete object
-
-# remove an item and return its value
-d = {'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5}
-v = d.pop('c')
-print(d)
-print(v)
-
-d.pop('z')  # KeyError if key does not exist
-d.pop('z', 'Not found')  # catch that error
-
-# remove and return the last item
-d.popitem()  # takes no arguments

@@ -55,7 +55,8 @@ l.reverse()  # same
 'A' not in l
 l.count('A')    # How many 'A' are in the list
 l.index('A')    # Return index of first occurence of 'A', Error if not found
-[i for i, x in enumerate(l) if x == "A"]  # [0, 3], all occurence
+[i for i, x in enumerate(l) if x == "A"]  # all occurence
+l.count(l[0]) == len(l)  # all equal, faster than len(set(l))<=1
 
 # Using Lists as Stacks
 # Last element added is the first element retrieved (“last-in, first-out”)
