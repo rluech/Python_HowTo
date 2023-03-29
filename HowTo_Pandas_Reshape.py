@@ -103,6 +103,8 @@ df.pivot_table(values=['D','E'], index=['A','C'],
                aggfunc={'D': 'mean',
                         'E': [min, max, 'mean']})
 
+cut()
+
 # --- crosstab -------------------------------------------------------
 
 pd.crosstab(df.A, df.B)  # frequency table

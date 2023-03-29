@@ -19,6 +19,10 @@ df3 = pd.DataFrame({
     "D": ["D8", "D9", "D10", "D11"],
 }, index=[8, 9, 10, 11])
 
+
+df1.set_index('A')
+df1
+
 d = pd.concat([df1, df2, df3])  # concat makes a full copy
 d
 d = pd.concat([df1, df2, df3], keys=["x", "y", "z"])
