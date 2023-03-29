@@ -58,18 +58,29 @@ str('Hello World').startswith(('H','I','J','K'))  # True
 str('Hello World').islower()  # False
 str('12A45').isnumeric()  # False
 
-# Dateframe: return rows matching a string:
-import pandas as pd
-d = pd.DataFrame({"name": ['Irene', 'Maggie', 'Lisa'],
-                 'value': [1,2,3]})
-d[d.name.str.startswith('M')]
-d[[x.startswith('M') for x in d.name]]  # same
-
-
+# loop over list of string (vectorize)
 a = ['name', 'value']
 b = ['A', 'B', 'value', 'C', 'name', 'D', 'E']
 ix = [i in a for i in b]
 b[ix]  # list cannot be indexed by boolean, numpy arrays would work
+
+''' --- real world problems ----------------------------------------------- '''
+
+# Dateframe: return rows matching a string:
+import pandas as pd
+d = pd.DataFrame({"name": ['Irene', 'Maggie', 'Lisa'],
+                 'value': ['CHF657.500.-','CHF2,847.700.-','CHF1,038.000.-'],
+                  'area': ['23 m2', '121 m2', '63 m2']})
+d[d.name.str.startswith('M')]
+d[[x.startswith('M') for x in d.name]]  # same
+
+# Dateframe: nasty string to numeric:
+d['value_num'] = d['value'].str.replace('[^0-9]', '').astype(int)
+d['area_num'] = d['area'].str.split(' ').str[0].astype(float)
+
+d.name.split('g')  # str from python, works on single strings
+d.name.str.split('g')  # vectorized, str from pandas woorks on dataframes
+
 
 # --- combining strings: + or .format() or f"" ---
 
