@@ -15,6 +15,8 @@ list(('A', 'B'))            # from tuple (iterable)
 list({'A': 'a', 'B': 'b'})  # from dictionary (iterable)
 list({'A', 'B'})            # from set (iterable)
 
+# pd.Series().tolist()      # to list work for some iterable
+
 # info
 len(l)
 
@@ -90,6 +92,7 @@ for x in range(5): y.append(x ** 2)    # same, a for loop
 
 # filter
 [x for x in [-2, 0, 2] if x >= 0]
+['yes' if v == 1 else 'no' if v == 2 else 'idle' for v in l]
 
 # flatten a list using a listcomp with two 'for':
 vec = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]

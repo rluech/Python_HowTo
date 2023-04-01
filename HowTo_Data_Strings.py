@@ -65,21 +65,22 @@ ix = [i in a for i in b]
 b[ix]  # list cannot be indexed by boolean, numpy arrays would work
 
 ''' --- real world problems ----------------------------------------------- '''
-
-# Dateframe: return rows matching a string:
 import pandas as pd
 d = pd.DataFrame({"name": ['Irene', 'Maggie', 'Lisa'],
                  'value': ['CHF657.500.-','CHF2,847.700.-','CHF1,038.000.-'],
-                  'area': ['23 m2', '121 m2', '63 m2']})
-d[d.name.str.startswith('M')]
-d[[x.startswith('M') for x in d.name]]  # same
+                  'area': ['23 m2', '121 m2', '63 m2']
+                  })
 
-# Dateframe: nasty string to numeric:
-d['value_num'] = d['value'].str.replace('[^0-9]', '').astype(int)
-d['area_num'] = d['area'].str.split(' ').str[0].astype(float)
+d.name[1].split('g')   # element-wise, python-built-in
+d.name.str.split('g')  # vectorized, df.str from pandas works on columns
 
-d.name.split('g')  # str from python, works on single strings
-d.name.str.split('g')  # vectorized, str from pandas woorks on dataframes
+d[[x.startswith('M') for x in d.name]]  # select rows matching a string
+d[d.name.str.startswith('M')]           # same, vectorized
+d.query("name.str.startswith('M')")     # same
+
+d['value_num'] = d['value'].str.replace('[^0-9]', '').astype(int)  # clean 'CHF2,847.700.-'
+d['area_num'] = d['area'].str.split(' ').str[0].astype(float)      # clean '23 m2'
+
 
 
 # --- combining strings: + or .format() or f"" ---
