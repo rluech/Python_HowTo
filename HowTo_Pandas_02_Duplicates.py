@@ -18,8 +18,9 @@ d.drop_duplicates(ignore_index=True, subset=['A','B'])
 d.drop_duplicates(ignore_index=True, subset=['A','B'], keep='last')
 
 # Usecase: print each set of dulicated rows:
-dup_ix = [i for i, x in enumerate(d.duplicated(subset=['A','B'])) if x]
-for i in dup_ix: 
+d.sort_values(by=d.columns.tolist(), ignore_index=True, inplace=True)  # first, sort whole df
+dup_ix = [i for i, x in enumerate(d.duplicated(subset=['A','B'])) if x]  # find dupl index
+for i in dup_ix:
     print(d.iloc[slice(i-1, i+1)], '\n')
 
 # unique

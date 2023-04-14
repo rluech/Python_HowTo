@@ -22,7 +22,6 @@ Answer the questions. Try to explain your results as well as you can with plain 
 
 # Minimum sufficient libraries and data are loaded for you
 import pandas as pd
-import matplotlib.pyplot as plt
 
 # Load runner attributes
 
@@ -44,6 +43,47 @@ df_times
 Perform simple descriptive data analysis: check how many rows and columns in both data files. Are there any missing values, duplicates, etc. 
 """
 
+# No NAs
+df_attributes
+df_attributes.info()  # dtype: all objects, 30923 rows, 5 cols, 0 non-null
+df_attributes.shape
+
+df_attributes.isna().sum()  # no NA
+df_attributes.count()       # inverse
+
+# There are 619 or 2% duplicates:
+df_attributes.duplicated().sum()
+round(df_attributes.duplicated().mean() * 100, 2)
+
+df_attributes.sort_values(by=df_attributes.columns.tolist(), ignore_index=True, inplace=True)
+dup_ix = [i for i, x in enumerate(df_attributes.duplicated()) if x]
+for i in dup_ix:
+    print(df_attributes.iloc[slice(i-1, i+1)], '\n')
+
+df_attributes.drop_duplicates(ignore_index=True, inplace=True)
+df_attributes.shape  # new: 30304 cols, now rows are unique
+30304 - 30923  # We dropped 619 rows
+
+# There are still 485 or 1.6%  duplicated unique_id, why?
+df_attributes.duplicated('unique_id').sum()
+round(df_attributes.duplicated('unique_id').mean() *100, 2)
+
+df_attributes.sort_values(by=df_attributes.columns.tolist()[::-1], ignore_index=True, inplace=True)
+dup_ix = [i for i, x in enumerate(df_attributes.duplicated('unique_id')) if x]
+for i in dup_ix:
+    print(df_attributes.iloc[slice(i-1, i+1)], '\n')
+df_attributes.iloc[dup_ix]
+
+dupl = df_attributes[df_attributes.duplicated(subset=['unique_id'], keep=False)]
+duplby = dupl.groupby('unique_id', as_index=False).size()
+duplby['size'].value_counts()
+
+dupl = pd.merge(duplby, dupl, on='unique_id')
+cols = ['size','unique_id','sex','nationality','ageClass','treatment']
+dupl = dupl[cols].sort_values(by=cols, ascending=False)
+dupl.head(20)
+
+dupl[dupl.unique_id == 'ff598cb34c7574ea75887d87534a4c6c9bd73ab8']
 
 """
 Merge the dataframes, show first 5 rows
